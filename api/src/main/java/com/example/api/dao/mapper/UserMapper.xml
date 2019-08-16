@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.api.dao.UserDao">
+    <resultMap id="rm" type="com.example.api.entity.PerDto">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="sex" property="sex"></result>
+        <result column="age" property="age"></result>
+        <collection property="achDtos"  ofType="com.example.api.entity.AchDto">
+<!--            一对多id不能重复否则查询数据有误-->
+            <id column="pid" property="id" ></id>
+            <result column="perId" property="perId"></result>
+            <result column="subjectName" property="subjectName"></result>
+            <result column="achievement" property="achievement"></result>
+            <result column="workTime" property="workTime"></result>
+        </collection>
+    </resultMap>
+    <select id="getPerAndAchList" resultMap="rm">
+        SELECT
+            per.id AS id
+            ,per.name AS name
+            ,per.sex AS sex
+            ,per.age AS age
+            ,ach.perId as perId
+            ,ach.subjectName AS subjectName
+            ,ach.achievement AS achievement
+            ,ach.workTime AS workTime
+        FROM t_person AS per
+        inner join t_achievement AS ach ON per.id = ach.perId
+        ORDER BY per.sex,ach.subjectName,ach.achievement
+    </select>
+</mapper>
